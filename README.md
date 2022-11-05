@@ -44,18 +44,18 @@ user_id | month | breaks
 Решение:
 \
 <code>
-SELECT user_id, date_part('month', mon) as month, count(*) as breaks\
-&nbsp;FROM (\
-&nbsp;&nbsp;SELECT user_id,\
-&nbsp;&nbsp;DATE_TRUNC('month', calltime) as mon,\
-&nbsp;&nbsp;LEAD(calltime)\
-&nbsp;&nbsp;OVER(\
-&nbsp;&nbsp;&nbsp;PARTITION by user_id, DATE_TRUNC('day', calltime)\
-&nbsp;&nbsp;&nbsp;ORDER BY calltime\
-&nbsp;&nbsp;) - (calltime + duration_sec * interval '1 second') as breaktime\
-&nbsp;&nbsp;FROM calls\
-&nbsp;&nbsp;WHERE DATE_TRUNC('year', calltime) = DATE_TRUNC('year', NOW())\
-&nbsp;) as calls\
-&nbsp;WHERE breaktime > INTERVAL '5 minute'\
-&nbsp;GROUP BY month, user_id\
+SELECT user_id, date_part('month', mon) as month, count(*) as breaks<br>
+&nbsp;FROM (<br>
+&nbsp;&nbsp;SELECT user_id,<br>
+&nbsp;&nbsp;DATE_TRUNC('month', calltime) as mon,<br>
+&nbsp;&nbsp;LEAD(calltime)<br>
+&nbsp;&nbsp;OVER(<br>
+&nbsp;&nbsp;&nbsp;PARTITION by user_id, DATE_TRUNC('day', calltime)<br>
+&nbsp;&nbsp;&nbsp;ORDER BY calltime<br>
+&nbsp;&nbsp;) - (calltime + duration_sec * interval '1 second') as breaktime<br>
+&nbsp;&nbsp;FROM calls<br>
+&nbsp;&nbsp;WHERE DATE_TRUNC('year', calltime) = DATE_TRUNC('year', NOW())<br>
+&nbsp;) as calls<br>
+&nbsp;WHERE breaktime > INTERVAL '5 minute'<br>
+&nbsp;GROUP BY month, user_id<br>
 </code>
